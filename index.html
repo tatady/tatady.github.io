@@ -20,11 +20,11 @@
             if (ua.indexOf('micromessenger') !== -1) {
                 // 微信浏览器
                 console.log('检测到微信浏览器，跳转到微信端域名');
-                window.location.href = wechatUrl + "?t=" + timestamp;
+                window.location.href = wechatUrl;
             } else {
                 // 其他浏览器（抖音、QQ、Safari、Chrome等）
                 console.log('检测到其他浏览器，跳转到其他端域名');
-                window.location.href = otherUrl + "?t=" + timestamp;
+                window.location.href = otherUrl;
             }
         }
         
