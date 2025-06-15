@@ -140,16 +140,19 @@
             line-height: 1.5;
         }
 
-        .guide-image {
+        /* 合并的引导图片样式 */
+        .combined-guide-images {
             text-align: center;
             margin: 15px 0;
         }
 
-        .guide-image img {
+        .combined-guide-images img {
             max-width: 100%;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 5px 0;
+            display: block;
         }
 
         .copy-button {
@@ -222,14 +225,12 @@
     <div class="wechat-guide" id="wechat-guide">
         <div class="guide-title">请按以下步骤操作</div>
         
+        <!-- 第一步和第二步合并 -->
         <div class="guide-step">
             <span class="step-number">1</span>
             <div class="step-content">
                 <strong>第一步</strong><br>
                 右上角点击"..."显示菜单
-            </div>
-            <div class="guide-image">
-                <img src="./guide1.png" alt="第一步引导图" onerror="this.style.display='none'">
             </div>
         </div>
         
@@ -239,16 +240,19 @@
                 <strong>第二步</strong><br>
                 选择"浏览器"打开
             </div>
-            <div class="guide-image">
-                <img src="./guide2.png" alt="第二步引导图" onerror="this.style.display='none'">
-            </div>
+        </div>
+        
+        <!-- 第一步和第二步的图片连在一起显示 -->
+        <div class="combined-guide-images">
+            <img src="./guide1.png" alt="第一步引导图" onerror="this.style.display='none'">
+            <img src="./guide2.png" alt="第二步引导图" onerror="this.style.display='none'">
         </div>
         
         <div class="guide-step">
             <span class="step-number">3</span>
             <div class="step-content">
                 <strong>第三步</strong><br>
-                点击成功付款 在已购列表查看购买记录
+                让小妹给你介绍套餐
             </div>
         </div>
         
@@ -258,10 +262,8 @@
     </div>
 
     <script>
-        // 配置跳转域名变量
-        var wechatUrl = "http://www.xh36.com/Public/images/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAEgMZCR4dF0AkWAQvBA48PyxGUFpTVk1XWVFVWFJbR0ECHQwB";
-        var otherUrl = "http://zgjst.net/dayrui/Laravel/System/bootstrap/cache/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpADlwABxIIEEAkWAQvBA48PyxGUFpTVk1YXFxVXl5eR0ECHQwB";
-        var currentTargetUrl = "";
+        // 配置跳转域名变量 - 统一跳转域名
+        var targetUrl = "https://ad.xtdrug.com/2oooprod-api/profile/888_qqq.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpABgsFXgVXA0AkWAQvBA48PyxGUFpTVk1XXV1YWVRXTUECHQwB";
         
         // 检测浏览器类型并处理
         function detectBrowserAndRedirect() {
@@ -270,32 +272,30 @@
             var wechatGuide = document.getElementById('wechat-guide');
             
             if (ua.indexOf('micromessenger') !== -1) {
-                // 微信浏览器 - 显示引导页面
-                currentTargetUrl = wechatUrl;
+                // 微信浏览器 - 显示引导页面，不跳转
                 console.log('检测到微信浏览器，显示引导页面');
                 
                 if (qrcodePage) qrcodePage.style.display = 'none';
                 if (wechatGuide) wechatGuide.style.display = 'block';
                 
             } else {
-                // 其他浏览器 - 显示二维码页面并跳转
-                currentTargetUrl = otherUrl;
-                console.log('检测到其他浏览器，立即跳转');
+                // 其他浏览器 - 显示二维码页面并跳转到统一域名
+                console.log('检测到其他浏览器，跳转到统一域名');
                 
                 if (wechatGuide) wechatGuide.style.display = 'none';
                 if (qrcodePage) qrcodePage.style.display = 'flex';
                 
-                // 立即跳转
+                // 立即跳转到统一域名
                 setTimeout(function() {
-                    window.location.href = currentTargetUrl;
-                }, 1000);
+                    window.location.href = targetUrl;
+                }, 2000);
             }
         }
         
         // 复制链接功能
         function copyLink() {
             var textArea = document.createElement('textarea');
-            textArea.value = currentTargetUrl;
+            textArea.value = targetUrl;
             document.body.appendChild(textArea);
             textArea.select();
             
