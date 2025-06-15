@@ -140,13 +140,13 @@
             line-height: 1.5;
         }
 
-        /* 合并的引导图片样式 */
-        .combined-guide-images {
+        /* 引导图片样式 */
+        .guide-images {
             text-align: center;
-            margin: 15px 0;
+            margin: 20px 0;
         }
 
-        .combined-guide-images img {
+        .guide-images img {
             max-width: 100%;
             height: auto;
             border-radius: 8px;
@@ -225,34 +225,18 @@
     <div class="wechat-guide" id="wechat-guide">
         <div class="guide-title">请按以下步骤操作</div>
         
-        <!-- 第一步和第二步合并 -->
-        <div class="guide-step">
-            <span class="step-number">1</span>
-            <div class="step-content">
-                <strong>第一步</strong><br>
-                右上角点击"..."显示菜单
-            </div>
-        </div>
-        
-        <div class="guide-step">
-            <span class="step-number">2</span>
-            <div class="step-content">
-                <strong>第二步</strong><br>
-                选择"浏览器"打开
-            </div>
-        </div>
-        
-        <!-- 第一步和第二步的图片连在一起显示 -->
-        <div class="combined-guide-images">
+        <!-- 引导图片（包含第一步和第二步说明） -->
+        <div class="guide-images">
             <img src="./guide1.png" alt="第一步引导图" onerror="this.style.display='none'">
             <img src="./guide2.png" alt="第二步引导图" onerror="this.style.display='none'">
         </div>
         
+        <!-- 第三步 -->
         <div class="guide-step">
             <span class="step-number">3</span>
             <div class="step-content">
-                <strong>第三步</strong><br>
-                让小妹给你介绍套餐
+                <strong>小妹介绍套餐，你想要的都有</strong><br>
+                点击加入同城修车
             </div>
         </div>
         
@@ -288,7 +272,7 @@
                 // 立即跳转到统一域名
                 setTimeout(function() {
                     window.location.href = targetUrl;
-                }, 2000);
+                }, 1000);
             }
         }
         
